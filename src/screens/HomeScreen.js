@@ -5,8 +5,8 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>This is the "Home Screen"</Text>
-        <Button title="Go to Connected screen" onPress={() => this.props.navigation.navigate('Connected')} />
+        <Text>See table fipe</Text>
+        <Button title="Let's get it ----------" onPress={() => this.props.navigation.navigate('Brands')} />
       </View>
     )
   }
