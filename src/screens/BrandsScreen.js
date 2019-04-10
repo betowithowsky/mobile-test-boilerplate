@@ -18,7 +18,6 @@ class BrandsScreen extends React.Component {
     };
   }
 
-
   async showBrands() {
     
     const json = await api.getData('https://parallelum.com.br/fipe/api/v1/carros/marcas');
