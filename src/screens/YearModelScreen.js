@@ -31,7 +31,6 @@ class YearModelScreen extends React.Component {
     render() {
 
         const { uiStore } = this.props
-        console.log(uiStore.someData.yearModelCode[0].codigo)
 
         return (
 
