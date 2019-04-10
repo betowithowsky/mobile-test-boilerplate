@@ -1,48 +1,47 @@
 import React from 'react'
-import { Text, View, Button, ScrollView, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { connect } from '../stores/index.js'
 
 import Api from '../stores/api'
+const api = new Api;
 
 class YearModelScreen extends React.Component {
 
-    constructor(props) {
-        super(props);
+    static navigationOptions = {
+        headerTitle: 'Anos'
+      };
 
-        this.state = { listaItens: [] };
-    }
+    async getYearModels() {
+        const { navigation } = this.props;
+        const { uiStore } = this.props
 
-    async showModels() {
+        const modelCode = navigation.getParam('modelCode', 'NO-ID');
+        uiStore.updateSomeData('modelCode', modelCode);
 
-        //const BrandCode = api.getCodeModels();
-        //console.log(BrandCode);
-        const json = await api.getYearModelsCars(api.getCodeModels());
-        this.setState({ listaItens: json });
-
+        const json = await api.getData(`https://parallelum.com.br/fipe/api/v1/carros/marcas/${uiStore.someData.brandCode}/modelos/${uiStore.someData.modelCode}/anos`);
+        uiStore.updateSomeData('yearModelCode', json);
     }
 
     componentWillMount() {
 
-        this.showModels();
+        this.getYearModels();
 
-    }
-
-    goPrice(codigo) {
-        const api = new Api;
-        api.setYearModels(codigo);
-        return this.props.navigation.navigate('Price');
     }
 
     render() {
 
+        const { uiStore } = this.props
+        console.log(uiStore.someData.yearModelCode[0].codigo)
+
         return (
 
             <FlatList
-                data={this.state.listaItens}
+                data={uiStore.someData.yearModelCode}
+                keyExtractor={(data) => data.codigo}
                 renderItem={({ item }) => {
                     return (
                         <TouchableOpacity
-                        onPress={() => this.goPrice(item.codigo)}
+                            onPress={() => this.props.navigation.navigate('Price', { yearModelCode: item.codigo })}
                         >
                             <View style={styles.item}>
                                 <Text>{item.nome}</Text>

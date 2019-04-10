@@ -1,48 +1,46 @@
 import React from 'react'
-import { Text, View, Button, ScrollView, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { connect } from '../stores/index.js'
 
 import Api from '../stores/api'
+const api = new Api;
 
 class ModelsScreen extends React.Component {
 
-    constructor(props) {
-        super(props);
+    static navigationOptions = {
+        headerTitle: 'Modelos'
+      };
 
-        this.state = { listaItens: [] };
-    }
+    async getModels() {
+        const { navigation } = this.props;
+        const { uiStore } = this.props
 
-    async showModels() {
+        const brandCode = navigation.getParam('brandCode', 'NO-ID');
+        uiStore.updateSomeData('brandCode', brandCode);
 
-        const api = new Api;
-        const json = await api.getModelsCars();
-        this.setState({ listaItens: json });
-
-
+        const json = await api.getData(`https://parallelum.com.br/fipe/api/v1/carros/marcas/${uiStore.someData.brandCode}/modelos`);
+        uiStore.updateSomeData('modelsList', json.modelos);
     }
 
     componentWillMount() {
 
-        this.showModels();
+        this.getModels();
 
-    }
-
-    goYear(codigo){
-      const api = new Api;
-      api.setCodeModels(codigo);
-      return this.props.navigation.navigate('Year');
     }
 
     render() {
 
+        const { uiStore } = this.props
+
         return (
 
             <FlatList
-                data={this.state.listaItens}
+                data={uiStore.someData.modelsList}
+                keyExtractor={(data) => data.codigo.toString()}
                 renderItem={({ item }) => {
                     return (
-                        <TouchableOpacity 
-                        onPress={() => this.goYear(item.codigo)}
+                        <TouchableOpacity
+                            onPress={() => this.props.navigation.navigate('Year', { modelCode: item.codigo })}
                         >
                             <View style={styles.item}>
                                 <Text>{item.nome}</Text>

@@ -4,50 +4,43 @@ import { connect } from '../stores/index.js'
 import axios from 'axios';
 
 import Api from '../stores/api'
-
 const api = new Api;
 
 class BrandsScreen extends React.Component {
 
-  constructor(props) {
-    super(props);
+  static navigationOptions = {
+    headerTitle: 'Marcas'
+  };
 
-    this.state = {
-      brandCode: null,
-      listaItens: []
-    };
-  }
+  async getBrands() {
 
-  async showBrands() {
+    const { uiStore } = this.props
     
     const json = await api.getData('https://parallelum.com.br/fipe/api/v1/carros/marcas');
-    this.setState({ listaItens: json });
+    uiStore.updateSomeData('brandsList', json);
 
-  }
-
-  goModels(codigo) {
-    api.setBrandModels(codigo);
-    console.log(api.getBrandModels());
-    return this.props.navigation.navigate('Models');
   }
 
   componentWillMount() {
 
-    this.showBrands();
+    this.getBrands();
 
   }
 
   render() {
 
+    const { uiStore } = this.props
+
     return (
+    
 
       <FlatList
-        data={this.state.listaItens}
+        data={uiStore.someData.brandsList}
         keyExtractor={(data) => data.codigo}
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
-              onPress={() => this.goModels(item.codigo)}
+              onPress={() => this.props.navigation.navigate('Models', {brandCode: item.codigo})}
             >
               <View style={styles.item}>
                 <Text>{item.nome}</Text>

@@ -3,8 +3,13 @@ import { Text, View, Button, ScrollView, StyleSheet, FlatList, TouchableOpacity 
 import { connect } from '../stores/index.js'
 
 import Api from '../stores/api'
+const api = new Api;
 
 class PriceModelScreen extends React.Component {
+
+    static navigationOptions = {
+        headerTitle: 'Veículo Infos'
+      };
 
     constructor(props) {
         super(props);
@@ -14,37 +19,41 @@ class PriceModelScreen extends React.Component {
             marca: '',
             modelo: '',
             ano: '',
-            combustivel: ''
+            combustivel: '',
+            codigoFipe: ''
         };
     }
 
-    async showModels() {
+    async getVehicleInfo() {
 
-        const api = new Api;
-        //const BrandCode = api.getCodeModels();
-        //console.log(BrandCode);
-        const json = await api.getPriceModelsCars(api.getCodeModels());
+        const { navigation } = this.props;
+        const { uiStore } = this.props
+
+        const yearModelCode = navigation.getParam('yearModelCode', 'NO-ID');
+        uiStore.updateSomeData('yearModelCode', yearModelCode);
+        
+        const json = await api.getData(`https://parallelum.com.br/fipe/api/v1/carros/marcas/${uiStore.someData.brandCode}/modelos/${uiStore.someData.modelCode}/anos/${uiStore.someData.yearModelCode}`);
         this.setState({
             valor: json.Valor,
             marca: json.Marca,
             modelo: json.Modelo,
             ano: json.AnoModelo,
+            codigoFipe: json.CodigoFipe,
             combustivel: json.Combustivel
         });
-
 
     }
 
     componentWillMount() {
 
-        this.showModels();
-
+        this.getVehicleInfo();
+        
     }
 
     render() {
 
         return (
-            <View style={styles.item}>
+            <View style={styles.item} key={this.state.codigoFipe}>
                 <Text>Valor: {this.state.valor}</Text>
                 <Text>Marca: {this.state.marca}</Text>
                 <Text>Modelo: {this.state.modelo}</Text>
