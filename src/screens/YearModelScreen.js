@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { connect } from '../stores/index.js'
 
 import Api from '../stores/api'
@@ -19,7 +19,7 @@ class YearModelScreen extends React.Component {
         uiStore.updateSomeData('modelCode', modelCode);
 
         const json = await api.getData(`https://parallelum.com.br/fipe/api/v1/carros/marcas/${uiStore.someData.brandCode}/modelos/${uiStore.someData.modelCode}/anos`);
-        uiStore.updateSomeData('yearModelCode', json);
+        uiStore.updateSomeData('yearModelList', json);
     }
 
     componentWillMount() {
@@ -35,7 +35,7 @@ class YearModelScreen extends React.Component {
         return (
 
             <FlatList
-                data={uiStore.someData.yearModelCode}
+                data={uiStore.someData.yearModelList}
                 keyExtractor={(data) => data.codigo}
                 renderItem={({ item }) => {
                     return (
@@ -43,7 +43,7 @@ class YearModelScreen extends React.Component {
                             onPress={() => this.props.navigation.navigate('Price', { yearModelCode: item.codigo })}
                         >
                             <View style={styles.item}>
-                                <Text>{item.nome}</Text>
+                                <Text style={styles.text}>{item.nome}</Text>
                             </View>
                         </TouchableOpacity>
                     );
@@ -62,6 +62,10 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 10,
         flexDirection: 'row',
+    },
+    text: {
+        fontWeight: 'bold',
+        fontSize: 18,
     }
 
 });

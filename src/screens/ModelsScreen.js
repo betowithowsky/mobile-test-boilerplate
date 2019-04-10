@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { connect } from '../stores/index.js'
 
 import Api from '../stores/api'
@@ -9,7 +9,7 @@ class ModelsScreen extends React.Component {
 
     static navigationOptions = {
         headerTitle: 'Modelos'
-      };
+    };
 
     async getModels() {
         const { navigation } = this.props;
@@ -43,7 +43,7 @@ class ModelsScreen extends React.Component {
                             onPress={() => this.props.navigation.navigate('Year', { modelCode: item.codigo })}
                         >
                             <View style={styles.item}>
-                                <Text>{item.nome}</Text>
+                                <Text style={styles.text}>{item.nome}</Text>
                             </View>
                         </TouchableOpacity>
                     );
@@ -62,6 +62,10 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 10,
         flexDirection: 'row',
+    },
+    text: {
+        fontWeight: 'bold',
+        fontSize: 18,
     }
 
 });

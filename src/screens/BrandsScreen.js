@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Button, ScrollView, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { connect } from '../stores/index.js'
 import axios from 'axios';
 
@@ -43,7 +43,7 @@ class BrandsScreen extends React.Component {
               onPress={() => this.props.navigation.navigate('Models', {brandCode: item.codigo})}
             >
               <View style={styles.item}>
-                <Text>{item.nome}</Text>
+                <Text style={styles.text}>{item.nome}</Text>
               </View>
 
             </TouchableOpacity>
@@ -63,6 +63,10 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     flexDirection: 'row',
+  },
+  text: {
+      fontWeight: 'bold',
+      fontSize: 18,
   }
 
 });

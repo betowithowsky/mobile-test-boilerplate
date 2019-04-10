@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Button, ScrollView, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { connect } from '../stores/index.js'
 
 import Api from '../stores/api'
@@ -53,12 +53,12 @@ class PriceModelScreen extends React.Component {
     render() {
 
         return (
-            <View style={styles.item} key={this.state.codigoFipe}>
-                <Text>Valor: {this.state.valor}</Text>
-                <Text>Marca: {this.state.marca}</Text>
-                <Text>Modelo: {this.state.modelo}</Text>
-                <Text>Ano: {this.state.ano}</Text>
-                <Text>Combustivel: {this.state.combustivel}</Text>
+            <View style={styles.item}>
+                <Text style={styles.text}>Valor: {this.state.valor}</Text>
+                <Text style={styles.text}>Marca: {this.state.marca}</Text>
+                <Text style={styles.text}>Modelo: {this.state.modelo}</Text>
+                <Text style={styles.text}>Ano: {this.state.ano}</Text>
+                <Text style={styles.text}>Combustivel: {this.state.combustivel}</Text>
             </View>
         )
     }
@@ -72,6 +72,11 @@ const styles = StyleSheet.create({
         borderColor: '#999',
         margin: 10,
         padding: 10,
+    },
+    text: {
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 18,
     }
 
 });
