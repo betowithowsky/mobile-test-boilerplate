@@ -75,7 +75,7 @@ class PriceModelScreen extends React.Component {
 
         return (
             <View style={{ flex: 1 }}>
-                {this.renderBtnAcessar()}
+                {this.renderVehicleInfos()}
             </View>
         )
     }
