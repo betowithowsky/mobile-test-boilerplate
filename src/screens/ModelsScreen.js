@@ -24,7 +24,7 @@ class ModelsScreen extends React.Component {
         uiStore.setIsFetching(false);
     }
 
-    renderBtnAcessar() {
+    renderModelsList() {
         const { uiStore } = this.props
 
         if (uiStore.isFetching) {

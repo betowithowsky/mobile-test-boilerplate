@@ -8,7 +8,7 @@ const api = new Api;
 class YearModelScreen extends React.Component {
 
     static navigationOptions = {
-        headerTitle: 'Anos'
+        headerTitle: 'Ano'
     };
 
     async getYearModels() {
@@ -24,7 +24,7 @@ class YearModelScreen extends React.Component {
         uiStore.setIsFetching(false);
     }
 
-    renderBtnAcessar() {
+    renderModelYearList() {
         const { uiStore } = this.props
 
         if (uiStore.isFetching) {

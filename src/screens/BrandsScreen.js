@@ -22,7 +22,7 @@ class BrandsScreen extends React.Component {
 
   }
 
-  renderBtnAcessar() {
+  renderBrandsList() {
     const { uiStore } = this.props
 
     if (uiStore.isFetching) {

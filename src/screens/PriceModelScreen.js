@@ -46,7 +46,7 @@ class PriceModelScreen extends React.Component {
 
     }
 
-    renderBtnAcessar() {
+    renderVehicleInfos() {
         const { uiStore } = this.props
 
         if (uiStore.isFetching) {
