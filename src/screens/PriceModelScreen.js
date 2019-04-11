@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { connect } from '../stores/index.js'
 
 import Api from '../stores/api'
@@ -29,6 +29,7 @@ class PriceModelScreen extends React.Component {
         const { navigation } = this.props;
         const { uiStore } = this.props
 
+        uiStore.setIsFetching(true);
         const yearModelCode = navigation.getParam('yearModelCode', 'NO-ID');
         uiStore.updateSomeData('yearModelCode', yearModelCode);
         
@@ -41,7 +42,27 @@ class PriceModelScreen extends React.Component {
             codigoFipe: json.CodigoFipe,
             combustivel: json.Combustivel
         });
+        uiStore.setIsFetching(false);
 
+    }
+
+    renderBtnAcessar() {
+        const { uiStore } = this.props
+
+        if (uiStore.isFetching) {
+            return (
+                <ActivityIndicator size="large" />
+            )
+        }
+        return (
+            <View style={styles.item}>
+                <Text style={styles.text}>Valor: {this.state.valor}</Text>
+                <Text style={styles.text}>Marca: {this.state.marca}</Text>
+                <Text style={styles.text}>Modelo: {this.state.modelo}</Text>
+                <Text style={styles.text}>Ano: {this.state.ano}</Text>
+                <Text style={styles.text}>Combustivel: {this.state.combustivel}</Text>
+            </View>
+        )
     }
 
     componentWillMount() {
@@ -53,12 +74,8 @@ class PriceModelScreen extends React.Component {
     render() {
 
         return (
-            <View style={styles.item}>
-                <Text style={styles.text}>Valor: {this.state.valor}</Text>
-                <Text style={styles.text}>Marca: {this.state.marca}</Text>
-                <Text style={styles.text}>Modelo: {this.state.modelo}</Text>
-                <Text style={styles.text}>Ano: {this.state.ano}</Text>
-                <Text style={styles.text}>Combustivel: {this.state.combustivel}</Text>
+            <View style={{ flex: 1 }}>
+                {this.renderBtnAcessar()}
             </View>
         )
     }

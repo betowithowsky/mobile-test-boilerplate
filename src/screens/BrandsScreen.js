@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { connect } from '../stores/index.js'
 import axios from 'axios';
 
@@ -15,10 +15,39 @@ class BrandsScreen extends React.Component {
   async getBrands() {
 
     const { uiStore } = this.props
-    
+    uiStore.setIsFetching(true);
     const json = await api.getData('https://parallelum.com.br/fipe/api/v1/carros/marcas');
     uiStore.updateSomeData('brandsList', json);
+    uiStore.setIsFetching(false);
 
+  }
+
+  renderBtnAcessar() {
+    const { uiStore } = this.props
+
+    if (uiStore.isFetching) {
+      return (
+        <ActivityIndicator size="large" />
+      )
+    }
+    return (
+      <FlatList
+        data={uiStore.someData.brandsList}
+        keyExtractor={(data) => data.codigo}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {this.props.navigation.navigate('Models', { brandCode: item.codigo })}}
+            >
+              <View style={styles.item}>
+                <Text style={styles.text}>{item.nome}</Text>
+              </View>
+
+            </TouchableOpacity>
+          );
+        }}
+      />
+    )
   }
 
   componentWillMount() {
@@ -32,24 +61,12 @@ class BrandsScreen extends React.Component {
     const { uiStore } = this.props
 
     return (
-    
 
-      <FlatList
-        data={uiStore.someData.brandsList}
-        keyExtractor={(data) => data.codigo}
-        renderItem={({ item }) => {
-          return (
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Models', {brandCode: item.codigo})}
-            >
-              <View style={styles.item}>
-                <Text style={styles.text}>{item.nome}</Text>
-              </View>
+      <View style={{ flex: 1 }}>
+        {this.renderBtnAcessar()}
+      </View>
 
-            </TouchableOpacity>
-          );
-        }}
-      />
+      
     )
   }
 }
@@ -65,8 +82,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   text: {
-      fontWeight: 'bold',
-      fontSize: 18,
+    fontWeight: 'bold',
+    fontSize: 18,
   }
 
 });

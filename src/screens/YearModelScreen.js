@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { connect } from '../stores/index.js'
 
 import Api from '../stores/api'
@@ -9,31 +9,30 @@ class YearModelScreen extends React.Component {
 
     static navigationOptions = {
         headerTitle: 'Anos'
-      };
+    };
 
     async getYearModels() {
         const { navigation } = this.props;
         const { uiStore } = this.props
 
+        uiStore.setIsFetching(true);
         const modelCode = navigation.getParam('modelCode', 'NO-ID');
         uiStore.updateSomeData('modelCode', modelCode);
 
         const json = await api.getData(`https://parallelum.com.br/fipe/api/v1/carros/marcas/${uiStore.someData.brandCode}/modelos/${uiStore.someData.modelCode}/anos`);
         uiStore.updateSomeData('yearModelList', json);
+        uiStore.setIsFetching(false);
     }
 
-    componentWillMount() {
-
-        this.getYearModels();
-
-    }
-
-    render() {
-
+    renderBtnAcessar() {
         const { uiStore } = this.props
 
+        if (uiStore.isFetching) {
+            return (
+                <ActivityIndicator size="large" />
+            )
+        }
         return (
-
             <FlatList
                 data={uiStore.someData.yearModelList}
                 keyExtractor={(data) => data.codigo}
@@ -49,6 +48,25 @@ class YearModelScreen extends React.Component {
                     );
                 }}
             />
+        )
+    }
+
+    componentWillMount() {
+
+        this.getYearModels();
+
+    }
+
+    render() {
+
+        const { uiStore } = this.props
+
+        return (
+
+            <View style={{ flex: 1 }}>
+                {this.renderBtnAcessar()}
+            </View>
+
         )
     }
 }

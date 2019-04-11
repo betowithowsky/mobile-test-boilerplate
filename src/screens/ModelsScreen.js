@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { connect } from '../stores/index.js'
 
 import Api from '../stores/api'
@@ -15,25 +15,24 @@ class ModelsScreen extends React.Component {
         const { navigation } = this.props;
         const { uiStore } = this.props
 
+        uiStore.setIsFetching(true);
         const brandCode = navigation.getParam('brandCode', 'NO-ID');
         uiStore.updateSomeData('brandCode', brandCode);
 
         const json = await api.getData(`https://parallelum.com.br/fipe/api/v1/carros/marcas/${uiStore.someData.brandCode}/modelos`);
         uiStore.updateSomeData('modelsList', json.modelos);
+        uiStore.setIsFetching(false);
     }
 
-    componentWillMount() {
-
-        this.getModels();
-
-    }
-
-    render() {
-
+    renderBtnAcessar() {
         const { uiStore } = this.props
 
+        if (uiStore.isFetching) {
+            return (
+                <ActivityIndicator size="large" />
+            )
+        }
         return (
-
             <FlatList
                 data={uiStore.someData.modelsList}
                 keyExtractor={(data) => data.codigo.toString()}
@@ -49,6 +48,24 @@ class ModelsScreen extends React.Component {
                     );
                 }}
             />
+        )
+    }
+
+    componentWillMount() {
+
+        this.getModels();
+
+    }
+
+    render() {
+
+        const { uiStore } = this.props
+
+        return (
+            <View style={{ flex: 1 }}>
+                {this.renderBtnAcessar()}
+            </View>
+
         )
     }
 }
